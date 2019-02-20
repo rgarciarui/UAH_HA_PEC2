@@ -150,9 +150,18 @@ dfPython['Fecha'] = ts
 
 import matplotlib.pyplot as plt
 import seaborn as sns
-plt.hist(dfPython['ViewCount'], color = 'blue', edgecolor = 'black', normed=True,
+
+width=8 # inch
+aspect=0.8 # height/width ratio
+height = width*aspect
+plt.figure(figsize=(width, height ))
+plt.hist(dfPython['ViewCount'], color = 'blue', edgecolor = 'black', 
          bins = int(180/5))
 
+# Add labels
+plt.title('Histograma de visitas a las preguntas', size = 20)
+plt.xlabel('Contador de vistas (ViewCount)', size = 16)
+plt.ylabel('Número de preguntas', size = 16)
 
 # seaborn histogram
 sns.distplot(dfPython['ViewCount'], hist=True, kde=True, 
@@ -160,7 +169,128 @@ sns.distplot(dfPython['ViewCount'], hist=True, kde=True,
              hist_kws={'edgecolor':'black'},
              kde_kws={'linewidth': 2})
 
+plt.boxplot(dfPython['ViewCount'])
 
+dfPython['ViewCount'].describe()
+
+
+dfPython['IDQuestion'][10]
+str(dfPython['IDQuestion'])
+
+answers2 = SITE.fetch('/questions/{ids}/answers', 
+                       min=20, 
+                       ids = [str(dfPython['IDQuestion'][10])],
+                       tagged='python', 
+                       sort='votes')
+
+answers = SITE.fetch('answers', 
+                       min=20, 
+                       tagged='python', 
+                       fromdate = datetime(2015, 1, 1).isoformat(' '),                        
+                       sort='votes')
+
+answers2 = SITE.fetch('/questions/{ids}/answers', 
+                       min=20, 
+                       ids = dfPython['IDQuestion'][0:10].tolist()
+                       )
+
+
+str(dfPython['IDQuestion'][0:10].tolist())
+
+answers11 = SITE.fetch('/questions/{ids}/answers', 
+                       min=20, 
+                       ids = dfPython['IDQuestion'][0:100].tolist()
+                       )
+answers12 = SITE.fetch('/questions/{ids}/answers', 
+                       min=20, 
+                       ids = dfPython['IDQuestion'][101:200].tolist()
+                       )
+answers13 = SITE.fetch('/questions/{ids}/answers', 
+                       min=20, 
+                       ids = dfPython['IDQuestion'][201:300].tolist()
+                       )
+answers13 = SITE.fetch('/questions/{ids}/answers', 
+                       min=20, 
+                       ids = dfPython['IDQuestion'][201:300].tolist()
+                       )
+
+
+
+answers_0 = SITE.fetch('/questions/{ids}/answers', 
+                       min=20, 
+                       ids = dfPython['IDQuestion'][0:100].tolist()
+                       )
+
+qlist_0 = answers_0['items']
+df_0 = pd.DataFrame(qlist_0)
+
+for i in range(101, len(dfPython), 100):
+    end = i+99
+    answers_next = SITE.fetch('/questions/{ids}/answers', 
+                              min=20, 
+                              ids = dfPython['IDQuestion'][i:end].tolist()
+                              )
+    qlist_next = answers_next['items']
+    df_next = pd.DataFrame(qlist_next)
+    
+    frames=[df_0, df_next]
+    df_0 = pd.concat(frames)
+
+df_0.head()
+
+owner_0 = pd.DataFrame(df_0['owner'].values.tolist())
+owner_0.head()
+
+owner_0.columns.values
+
+owner_0 = owner_0.drop(['accept_rate', 'link', 'profile_image', 'user_type'], axis=1)
+owner_0.head()
+
+
+df_0.columns.values
+
+df_0 = df_0.drop(['community_owned_date', 'is_accepted', 
+                  'last_activity_date', 'last_edit_date', 'owner'], axis=1)
+df_0.head()
+
+
+dfAnswers = pd.concat([df_0, owner_0], axis=1, join_axes=[df_0.index])
+dfAnswers.head()
+
+dfAnswers.columns.values
+
+sequence_0 = {'answer_id': 'IDAnswer', 
+              'creation_date': 'DateAnswer', 
+              'question_id': 'question_id', 
+              'score': 'ScoreAnswer',
+              'display_name': 'DisplayName', 
+              'reputation': 'ReputationIDUserAnswer', 
+              'user_id': 'IDUserAnswer'}
+
+dfAnswers = dfAnswers.rename(columns = sequence_0)
+
+
+listIDQuestion = dfPython['IDQuestion'].tolist()
+
+row = (dfAnswers.loc[dfAnswers['question_id'] == listIDQuestion[10]])['ScoreAnswer'].idxmax()
+row = (dfAnswers.loc[dfAnswers['question_id'] == listIDQuestion[0]])['ScoreAnswer'].idxmax()
+
+resultado = pd.DataFrame()
+
+frames=[resultado, result]
+
+result = dfAnswers.loc[row]
+result = result.reset_index()
+resultado = result
+resultado.reindex_axis
+
+resultado = pd.concat(frames)
+
+dfAnswers.iloc[row, :]
+
+result = result.rename(columns=[0,1])
+
+dfAnswers.loc[dfAnswers['question_id'] == listIDQuestion[10]].idxmax()
 
 
 
