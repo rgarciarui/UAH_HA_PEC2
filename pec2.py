@@ -345,6 +345,7 @@ dfPythonMerged = pd.merge(dfPython, resultado,  how='left', left_on=['IDQuestion
 cols = [12]
 dfPythonMerged.drop(dfPythonMerged.columns[cols],axis=1,inplace=True)
 
+dfPythonMerged.head()
 
 
 
