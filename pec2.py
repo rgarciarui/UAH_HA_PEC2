@@ -340,3 +340,13 @@ resultado.drop(resultado.columns[cols],axis=1,inplace=True)
 
 resultado.head()
 
+dfPythonMerged = pd.merge(dfPython, resultado,  how='left', left_on=['IDQuestion'], right_on = ['question_id'])
+
+cols = [12]
+dfPythonMerged.drop(dfPythonMerged.columns[cols],axis=1,inplace=True)
+
+
+
+
+
+
