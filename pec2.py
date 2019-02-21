@@ -348,6 +348,83 @@ dfPythonMerged.drop(dfPythonMerged.columns[cols],axis=1,inplace=True)
 dfPythonMerged.head()
 
 
+uniqueList = []
+
+# Creamos una lista de usuarios diferentes
+listIDUsers = dfPythonMerged['IDUser'].tolist()
+
+uniqueList = []
+
+for user in listIDUsers:
+    if user not in uniqueList:
+        uniqueList.append(user)
+
+foo = dfPythonMerged.loc[ (dfPythonMerged['IDUser']==uniqueList[0])]
+row = foo['Reputation'].idxmax()
+row
+
+foo = foo.reset_index()
+foo = foo[foo['index'] == row]
+
+resultado = foo
+
+emptyAnswer = foo
+
+emptyAnswer.ix[:,:] = None
+
+
+for token in uniqueList:
+    #print("Procesando el token:", token)
+    foo = dfPythonMerged.loc[ (dfPythonMerged['IDUser']==token)]
+    #print(foo.head())
+    
+    if foo.empty:
+        frames = [resultado, emptyAnswer]
+        emptyAnswer['IDUser'] = token
+    else:
+        row = foo['Reputation'].idxmax()
+        #print("LA fila con el valor maximo es: ", row)
+        foo = foo.reset_index()
+        foo = foo[foo['index'] == row]
+        frames = [resultado, foo]
+    
+    resultado = pd.concat(frames) 
+    
+resultado.head()
+
+# borramos primera fila
+resultado = resultado.reset_index()
+resultado = resultado.drop(resultado.index[[0]])
+
+# borramos columnas
+cols = [0, 1]
+resultado.drop(resultado.columns[cols],axis=1,inplace=True)
+
+# reasignamos indices
+resultado = resultado.reset_index()
+cols = [0]
+resultado.drop(resultado.columns[cols],axis=1,inplace=True)
+
+resultado.head()    
+    
+# El usuario con mayor reputacon
+resultado.loc[resultado['Reputation'].idxmax()]
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
