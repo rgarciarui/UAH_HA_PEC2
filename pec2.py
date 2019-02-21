@@ -268,10 +268,11 @@ sequence_0 = {'answer_id': 'IDAnswer',
               'user_id': 'IDUserAnswer'}
 
 dfAnswers = dfAnswers.rename(columns = sequence_0)
-
+dfAnswers.head()
 
 listIDQuestion = dfPython['IDQuestion'].tolist()
 
+'''
 row = (dfAnswers.loc[dfAnswers['question_id'] == listIDQuestion[10]])['ScoreAnswer'].idxmax()
 row = (dfAnswers.loc[dfAnswers['question_id'] == listIDQuestion[0]])['ScoreAnswer'].idxmax()
 
@@ -291,15 +292,51 @@ dfAnswers.iloc[row, :]
 result = result.rename(columns=[0,1])
 
 dfAnswers.loc[dfAnswers['question_id'] == listIDQuestion[10]].idxmax()
+'''
+listIDQuestion = dfPython['IDQuestion'].tolist()
 
+foo = dfAnswers.loc[ (dfAnswers['question_id']==listIDQuestion[0])]
+row = foo['ScoreAnswer'].idxmax()
+row
 
+foo = foo.reset_index()
+foo = foo[foo['index'] == row]
 
+resultado = foo
 
+emptyAnswer = foo
 
+emptyAnswer.ix[:,:] = None
 
+for token in listIDQuestion:
+    #print("Procesando el token:", token)
+    foo = dfAnswers.loc[ (dfAnswers['question_id']==token)]
+    #print(foo.head())
+    
+    if foo.empty:
+        frames = [resultado, emptyAnswer]
+        emptyAnswer['question_id'] = token
+    else:
+        row = foo['ScoreAnswer'].idxmax()
+        #print("LA fila con el valor maximo es: ", row)
+        foo = foo.reset_index()
+        foo = foo[foo['index'] == row]
+        frames = [resultado, foo]
+    
+    resultado = pd.concat(frames) 
 
+# borramos primera fila
+resultado = resultado.reset_index()
+resultado = resultado.drop(resultado.index[[0]])
 
+# borramos columnas
+cols = [0, 1]
+resultado.drop(resultado.columns[cols],axis=1,inplace=True)
 
+# reasignamos indices
+resultado = resultado.reset_index()
+cols = [0]
+resultado.drop(resultado.columns[cols],axis=1,inplace=True)
 
-
+resultado.head()
 
